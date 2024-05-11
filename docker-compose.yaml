@@ -1,0 +1,79 @@
+version: '3'
+services:
+  router1:
+    image: hydrokhoos/ndn-all:latest
+    container_name: router1
+    tty: true
+    volumes:
+      - ./router1/nfd.conf:/usr/local/etc/ndn/nfd.conf
+      - ./router1/nlsr.conf:/usr/local/etc/ndn/nlsr.conf
+      - ./startRouter.sh:/startRouter.sh
+    environment:
+      - NEIGHBORS=router2 router3
+      - CONTAINER_NAME=router1
+    command: [ "/bin/sh", "/startRouter.sh" ]
+
+  router2:
+    image: hydrokhoos/ndn-all:latest
+    container_name: router2
+    tty: true
+    volumes:
+      - ./router2/nfd.conf:/usr/local/etc/ndn/nfd.conf
+      - ./router2/nlsr.conf:/usr/local/etc/ndn/nlsr.conf
+      - ./startRouter.sh:/startRouter.sh
+    environment:
+      - NEIGHBORS=router1 router3
+      - CONTAINER_NAME=router2
+    command: [ "/bin/sh", "/startRouter.sh" ]
+
+  router3:
+    image: hydrokhoos/ndn-all:latest
+    container_name: router3
+    tty: true
+    volumes:
+      - ./router3/nfd.conf:/usr/local/etc/ndn/nfd.conf
+      - ./router3/nlsr.conf:/usr/local/etc/ndn/nlsr.conf
+      - ./startRouter.sh:/startRouter.sh
+    environment:
+      - NEIGHBORS=router1 router2
+      - CONTAINER_NAME=router3
+    command: [ "/bin/sh", "/startRouter.sh" ]
+
+  pc1:
+    image: hydrokhoos/ndn-all:latest
+    container_name: pc1
+    tty: true
+    environment:
+      - NDN_CLIENT_TRANSPORT=tcp4://router1
+      - ROUTER_PREFIX=/ndn/waseda/%C1.Router/router1
+      - CONTAINER_NAME=pc1
+    volumes:
+      - ./startPC.sh:/startPC.sh
+      - ./producer.py:/producer.py
+    command: [ "/bin/sh", "/startPC.sh" ]
+
+  pc2:
+    image: hydrokhoos/ndn-all:latest
+    container_name: pc2
+    tty: true
+    environment:
+      - NDN_CLIENT_TRANSPORT=tcp4://router2
+      - ROUTER_PREFIX=/ndn/waseda/%C1.Router/router2
+      - CONTAINER_NAME=pc2
+    volumes:
+      - ./startPC.sh:/startPC.sh
+      - ./producer.py:/producer.py
+    command: [ "/bin/sh", "/startPC.sh" ]
+
+  pc3:
+    image: hydrokhoos/ndn-all:latest
+    container_name: pc3
+    tty: true
+    environment:
+      - NDN_CLIENT_TRANSPORT=tcp4://router3
+      - ROUTER_PREFIX=/ndn/waseda/%C1.Router/router3
+      - CONTAINER_NAME=pc3
+    volumes:
+      - ./startPC.sh:/startPC.sh
+      - ./producer.py:/producer.py
+    command: [ "/bin/sh", "/startPC.sh" ]
