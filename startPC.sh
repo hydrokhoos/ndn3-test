@@ -15,6 +15,13 @@ echo "Router is up"
 nlsrc -R $ROUTER_PREFIX -k advertise /$CONTAINER_NAME
 python3 /producer.py &
 
+# pip install pycryptodome
+# pip install git+https://github.com/multiformats/py-multibase.git
+# export PEERID=$(python3 /gen_peerid.py)
+nlsrc -R $ROUTER_PREFIX -k advertise /$PEERID
+nlsrc -R $ROUTER_PREFIX -k advertise /$ROUTER_GROUP_NUM
+python3 /main.py &
+
 echo "PC is ready"
 
 sleep infinity

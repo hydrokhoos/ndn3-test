@@ -17,6 +17,10 @@ done
 echo "Start NLSR"
 nlsr -f /usr/local/etc/ndn/nlsr.conf &
 
+# Provider Record Holder
+# python3 /main.py 2> /pymain.log &
+# nlsrc advertise /$ROUTER_GROUP_NUM
+
 echo "Router is ready"
 
 sleep infinity

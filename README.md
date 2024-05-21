@@ -25,11 +25,30 @@ docker logs pc1
 docker exec router1 nlsrc status
 ```
 
-## Usage
+## Usage 1
 ### Retrieve content
 ```bash
 docker exec pc1 ndnpeek -pf /pc2
 # Hello, my name is pc2.
+```
+
+## Usage 2
+### 1. Add contents
+```bash
+docker exec -it pc1 bash
+./pub_contents.sh
+```
+
+### 2. Find provider and peer
+```bash
+docker exec -it pc2 bash
+./get_peerids.sh
+```
+
+### 3. Check results
+Measurement results are saved in ```pc2:/ndn-find-provs-peer.csv```
+```bash
+docker cp pc2:/ndn-find-provs-peer.csv .
 ```
 
 ## Destroy
